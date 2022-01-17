@@ -4,8 +4,8 @@ stages:
     cmd: python src/stage_01_load.py --config=params.yaml
     deps:
     - path: src/stage_01_load.py
-      md5: 666a1833a6486299980a5f9c9dbb2a6b
-      size: 985
+      md5: 7e8431aca0202f3705aa4c10d0f487b9
+      size: 1221
     params:
       params.yaml:
         artifacts.raw_local_data: artifacts/raw_local_data_dir/data.csv
@@ -21,8 +21,8 @@ stages:
       md5: 7d814a1bda02145efe703f4e1c01847a
       size: 93599
     - path: src/stage_02_split_data.py
-      md5: 0b1eaaffdf529f3d4607fe3db0631872
-      size: 1330
+      md5: 40bea70dfa6ca8b71a11135a16bfc373
+      size: 1569
     params:
       params.yaml:
         artifacts.raw_local_data: artifacts/raw_local_data_dir/data.csv
@@ -38,3 +38,45 @@ stages:
     - path: artifacts/processed_data/train.csv
       md5: d6dded45f97a8e239b8321d3fdc695b7
       size: 74914
+  train:
+    cmd: python src/stage_03_train.py --config=params.yaml
+    deps:
+    - path: artifacts/processed_data/train.csv
+      md5: d6dded45f97a8e239b8321d3fdc695b7
+      size: 74914
+    - path: src/stage_03_train.py
+      md5: 8910fabfe1a92d759c2d8c9f0e702487
+      size: 1879
+    params:
+      params.yaml:
+        artifacts.split_data.train_path: artifacts/processed_data/train.csv
+        base.random_state: 42
+        base.target_col: quality
+        estimators.ElasticNet.params.l1_ratio: 0.4
+    outs:
+    - path: artifacts/report/params.json
+      md5: a4aab0167612f21a6085dd05cfafdbf6
+      size: 44
+    - path: artifacts/saved_models/model.joblib
+      md5: c7a8f2cd1e08948b9f7620f76e6ffdf5
+      size: 699
+  evaluate:
+    cmd: python src/stage_04_evaluate.py --config=params.yaml
+    deps:
+    - path: artifacts/processed_data/test.csv
+      md5: b0a1dbeb7586d88a8be61abde64f9114
+      size: 18832
+    - path: artifacts/saved_models/model.joblib
+      md5: c7a8f2cd1e08948b9f7620f76e6ffdf5
+      size: 699
+    - path: src/stage_04_evaluate.py
+      md5: 9124731ddc087e7a9c8d67464573624b
+      size: 1717
+    params:
+      params.yaml:
+        artifacts.split_data.test_path: artifacts/processed_data/test.csv
+        base.target_col: quality
+    outs:
+    - path: artifacts/report/scores.json
+      md5: 29825050f52e75f97304696790c4b000
+      size: 107

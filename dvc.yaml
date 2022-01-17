@@ -34,10 +34,23 @@ stages:
       - base.random_state
       - base.target_col
       - artifacts.split_data.train_path
-      - estimators.ElasticNet.params.aplha
+      #- estimators.ElasticNet.params.aplha
       - estimators.ElasticNet.params.l1_ratio
     metrics:
       - artifacts/report/params.json:
           cache: false
     outs:
-      - artifacts/saved_model/model.joblib
+      - artifacts/saved_models/model.joblib
+
+  evaluate:
+    cmd: python src/stage_04_evaluate.py --config=params.yaml
+    deps:
+      - src/stage_04_evaluate.py
+      - artifacts/processed_data/test.csv
+      - artifacts/saved_models/model.joblib
+    params:
+      - base.target_col
+      - artifacts.split_data.test_path
+    metrics:
+      - artifacts/report/scores.json:
+          cache: false

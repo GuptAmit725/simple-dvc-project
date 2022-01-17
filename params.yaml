@@ -20,7 +20,7 @@ artifacts :
   reports:
     reports_dir : artifacts/report
     params : artifacts/report/params.json
-    score : artifacts/report/scores.json
+    scores : artifacts/report/scores.json
 
   model_dir : artifacts/saved_models
   model_path : artifacts/saved_models/model.joblib

@@ -1,5 +1,6 @@
 import pandas as pd
 import argparse
+import logging
 from sklearn.model_selection import train_test_split
 from src.utils.common_utils import (
     read_params,
@@ -7,6 +8,10 @@ from src.utils.common_utils import (
     save_local_df,
     create_dir
 )
+
+logging_str = "[%(asctime)s: %(levelname)s : %(module)s] : %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=logging_str)
+
 
 def split_and_save_data(config_path:str):
     config = read_params(config_path)
@@ -41,5 +46,7 @@ if __name__ == '__main__':
 
     try:
         data = split_and_save_data(config_path=parsed_args.config)
+        logging.info(f"Splitting of the data completed.")
     except Exception as e:
+        logging.info(e)
         raise e
