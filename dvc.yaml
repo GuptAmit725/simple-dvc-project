@@ -2,6 +2,7 @@ stages:
   load_data:
     cmd: python src/stage_01_load.py --config=params.yaml
     deps:
+      - src/utils/common_utils.py
       - src/stage_01_load.py
     params:
       - data_source.s3_source
@@ -12,6 +13,7 @@ stages:
   split_data:
     cmd: python src/stage_02_split_data.py --config=params.yaml
     deps:
+      - src/utils/common_utils.py
       - src/stage_02_split_data.py
       - artifacts/raw_local_data_dir/data.csv
     params:
@@ -28,6 +30,7 @@ stages:
   train:
     cmd: python src/stage_03_train.py --config=params.yaml
     deps:
+      - src/utils/common_utils.py
       - src/stage_03_train.py
       - artifacts/processed_data/train.csv
     params:
@@ -45,6 +48,7 @@ stages:
   evaluate:
     cmd: python src/stage_04_evaluate.py --config=params.yaml
     deps:
+      - src/utils/common_utils.py
       - src/stage_04_evaluate.py
       - artifacts/processed_data/test.csv
       - artifacts/saved_models/model.joblib
